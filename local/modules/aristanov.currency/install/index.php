@@ -37,11 +37,13 @@ class aristanov_currency extends CModule
         $this->createAgent();
 
           // Регистрация административной страницы
-          CopyDirFiles(
+        CopyDirFiles(
             $_SERVER['DOCUMENT_ROOT'].'/local/modules/aristanov.currency/admin',
             $_SERVER['DOCUMENT_ROOT'].'/bitrix/admin',
             true, true
         );
+
+        $this->InstallFiles();
     }
 
     function DoUninstall()
@@ -50,6 +52,7 @@ class aristanov_currency extends CModule
 
         $this->dropTables();
         $this->deleteAgent();
+        $this->UnInstallFiles();
         ModuleManager::unRegisterModule($this->MODULE_ID);
 
         DeleteDirFiles(
@@ -93,7 +96,8 @@ class aristanov_currency extends CModule
     }
 
 
-    function createAgent() {
+    function createAgent() 
+    {
         $agentFunction = 'Aristanov\\Currency\\CurrencyAgent::updateRates();';
         CAgent::AddAgent(
             $agentFunction, // имя функции
@@ -107,7 +111,25 @@ class aristanov_currency extends CModule
         );
     }
     
-    function deleteAgent() {
+    function deleteAgent() 
+    {
         CAgent::RemoveModuleAgents($this->MODULE_ID);
+    }
+
+    function InstallFiles()
+    {
+        CopyDirFiles(
+            $_SERVER["DOCUMENT_ROOT"]."/local/modules/{$this->MODULE_ID}/install/components",
+            $_SERVER["DOCUMENT_ROOT"]."/local/components",
+            true, true
+        );
+        return true;
+    }
+
+    function UnInstallFiles()
+    {
+        DeleteDirFilesEx("/local/components/aristanov/currency.filter");
+        DeleteDirFilesEx("/local/components/aristanov/currency.list");
+        return true;
     }
 }

@@ -13,8 +13,6 @@ use Aristanov\Currency\CurrencyRateTable;
 if (!Loader::includeModule('aristanov.currency')) {
     throw new Exception('Модуль "aristanov.currency" не найден!');
 }
-$log = date('Y-m-d H:i:s') . ' ' . print_r($_REQUEST, true);
-    file_put_contents(__DIR__ . '/log.txt', $log . PHP_EOL, FILE_APPEND);
 
 // Запрос на удаление
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_REQUEST['action'] == 'delete' && check_bitrix_sessid()) {
